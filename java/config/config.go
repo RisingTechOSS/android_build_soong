@@ -84,6 +84,7 @@ func init() {
 	// D8 invocations are shorter lived, so we restrict their JIT tiering relative to R8.
 	// Note that the `-JXX` prefix syntax is specific to the R8/D8 invocation wrappers.
 	exportedVars.ExportStringListStaticVariable("D8Flags", []string{
+	    "-JXmx4096M",
 		`-JXX:OnError="cat hs_err_pid%p.log"`,
 		"-JXX:CICompilerCount=6",
 		"-JXX:+UseDynamicNumberOfGCThreads",
@@ -92,6 +93,7 @@ func init() {
 	})
 
 	exportedVars.ExportStringListStaticVariable("R8Flags", []string{
+        "-JXmx4096M",
 		`-JXX:OnError="cat hs_err_pid%p.log"`,
 		"-JXX:CICompilerCount=6",
 		"-JXX:+UseDynamicNumberOfGCThreads",
