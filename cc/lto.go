@@ -120,13 +120,27 @@ func (lto *lto) flags(ctx BaseModuleContext, flags Flags) Flags {
 			policy := "cache_size=10%:cache_size_bytes=10g"
 			flags.Local.LdFlags = append(flags.Local.LdFlags, cachePolicyFormat+policy)
 		}
+		
+        flags.Local.LdFlags = append(flags.Local.LdFlags,
+            "-Wl,-mllvm,-inline-threshold=600",
+            "-Wl,-mllvm,-unroll-threshold=800")
+        if ctx.isPgoCompile() || ctx.isAfdoCompile() {
+            flags.Local.LdFlags = append(flags.Local.LdFlags,
+                "-Wl,-plugin-opt,-import-instr-limit=10")
+        } else {
+            flags.Local.LdFlags = append(flags.Local.LdFlags,
+                "-Wl,-plugin-opt,-import-instr-limit=5")
+        }
+        pollyFlags := []string{
+            "-Wl,-mllvm,-polly",
+            "-Wl,-mllvm,-polly-ast-use-context",
+            "-Wl,-mllvm,-polly-invariant-load-hoisting",
+            "-Wl,-mllvm,-polly-vectorizer=stripmine",
+            "-Wl,-mllvm,-polly-loopfusion-greedy=1",
+            "-Wl,-mllvm,-polly-scheduling-chunksize=1",
+        }
+        flags.Local.LdFlags = append(flags.Local.LdFlags, pollyFlags...)
 
-		// If the module does not have a profile, be conservative and limit cross TU inline
-		// limit to 5 LLVM IR instructions, to balance binary size increase and performance.
-		if !ctx.Darwin() && !ctx.isPgoCompile() && !ctx.isAfdoCompile() {
-			flags.Local.LdFlags = append(flags.Local.LdFlags,
-				"-Wl,-plugin-opt,-import-instr-limit=5")
-		}
 	}
 	return flags
 }
