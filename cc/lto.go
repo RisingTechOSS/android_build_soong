@@ -134,6 +134,8 @@ func (lto *lto) flags(ctx BaseModuleContext, flags Flags) Flags {
             "-Wl,-mllvm,-polly-loopfusion-greedy=1",
             "-Wl,-mllvm,-polly-scheduling-chunksize=1",
             "-Wl,-plugin-opt,-import-instr-limit=40",
+            "-Wl,-plugin-opt=O3",
+            "-Wl,-O3",
         }
         flags.Local.LdFlags = append(flags.Local.LdFlags, additionalLdFlags...)
 
