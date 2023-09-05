@@ -125,6 +125,7 @@ func (lto *lto) flags(ctx BaseModuleContext, flags Flags) Flags {
         // performance.
         additionalLdFlags := []string{
             "-Wl,-mllvm,-inline-threshold=600",
+            "-Wl,-mllvm,-inlinehint-threshold=550",
             "-Wl,-mllvm,-unroll-threshold=800",
             "-Wl,-mllvm,-polly",
             "-Wl,-mllvm,-polly-ast-use-context",
