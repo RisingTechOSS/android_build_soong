@@ -120,13 +120,12 @@ func (lto *lto) flags(ctx BaseModuleContext, flags Flags) Flags {
 			policy := "cache_size=10%:cache_size_bytes=10g"
 			flags.Local.LdFlags = append(flags.Local.LdFlags, cachePolicyFormat+policy)
 		}
-		
-        flags.Local.LdFlags = append(flags.Local.LdFlags,
-            "-Wl,-mllvm,-inline-threshold=600",
-            "-Wl,-mllvm,-unroll-threshold=800")
+
         // Reduce the inlining threshold for a better balance of binary size and
         // performance.
         additionalLdFlags := []string{
+            "-Wl,-mllvm,-inline-threshold=600",
+            "-Wl,-mllvm,-unroll-threshold=800",
             "-Wl,-mllvm,-polly",
             "-Wl,-mllvm,-polly-ast-use-context",
             "-Wl,-mllvm,-polly-invariant-load-hoisting",
